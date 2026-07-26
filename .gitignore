@@ -1,0 +1,7 @@
+.claude/
+
+.vscode/
+
+# Java / Maven build output
+target/
+*.class

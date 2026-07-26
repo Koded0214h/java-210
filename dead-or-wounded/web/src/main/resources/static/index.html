@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dead or Wounded</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="board">
+        <h1>DEAD OR WOUNDED</h1>
+        <p class="subtitle">Guess the 4-digit code before time runs out.</p>
+
+        <div class="hud">
+            <div class="timer" id="timer">60</div>
+            <div class="attempts">Attempts: <span id="attempts">0</span></div>
+        </div>
+
+        <form id="guess-form" autocomplete="off">
+            <input
+                id="guess-input"
+                type="text"
+                inputmode="numeric"
+                pattern="\d{4}"
+                maxlength="4"
+                placeholder="0000"
+                aria-label="4-digit guess"
+                disabled
+            >
+            <button type="submit" id="guess-submit" disabled>Guess</button>
+        </form>
+
+        <p class="error" id="error"></p>
+
+        <ul class="history" id="history"></ul>
+
+        <div class="game-over" id="game-over" hidden>
+            <p id="game-over-message"></p>
+            <button id="restart">Play Again</button>
+        </div>
+
+        <button id="start" class="start-button">Start Game</button>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

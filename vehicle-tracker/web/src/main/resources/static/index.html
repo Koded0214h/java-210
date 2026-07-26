@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fleet Vehicle Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="wrap">
+        <h1>FLEET VEHICLE TRACKER</h1>
+        <p class="subtitle">
+            Live view of a shared <code>MonitorVehicleTracker</code>. Background GPS
+            threads move each vehicle on the server; this page polls a consistent
+            snapshot once a second.
+        </p>
+
+        <div class="layout">
+            <div class="grid-wrap">
+                <div class="grid" id="grid"></div>
+            </div>
+
+            <div class="side-panel">
+                <h2>Fleet</h2>
+                <table id="fleet-table">
+                    <thead>
+                        <tr><th>ID</th><th>X</th><th>Y</th></tr>
+                    </thead>
+                    <tbody id="fleet-body"></tbody>
+                </table>
+
+                <h2>Dispatch a correction</h2>
+                <form id="dispatch-form">
+                    <select id="vehicle-select"></select>
+                    <input id="x-input" type="number" placeholder="x" required>
+                    <input id="y-input" type="number" placeholder="y" required>
+                    <button type="submit">Send</button>
+                </form>
+                <p class="error" id="error"></p>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

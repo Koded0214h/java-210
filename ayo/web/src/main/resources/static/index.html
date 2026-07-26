@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="board-wrap">
+        <h1>AYO</h1>
+        <p class="subtitle">Capture an opponent's pit by landing your last seed there, making it hold 2 or 3.</p>
+
+        <div class="turn-row">
+            <div class="turn-indicator" id="turn-indicator">Player A's turn</div>
+            <button id="start" class="start-button">New Game</button>
+        </div>
+
+        <p class="message" id="message"></p>
+
+        <div class="board" id="board">
+            <div class="store store-b">
+                <div class="store-label">Store B</div>
+                <div class="store-value" id="store-b">0</div>
+            </div>
+
+            <div class="pit-rows">
+                <div class="pit-row row-b" id="row-b"></div>
+                <div class="pit-row row-a" id="row-a"></div>
+            </div>
+
+            <div class="store store-a">
+                <div class="store-label">Store A</div>
+                <div class="store-value" id="store-a">0</div>
+            </div>
+        </div>
+
+        <div class="game-over" id="game-over" hidden>
+            <p id="game-over-message"></p>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
