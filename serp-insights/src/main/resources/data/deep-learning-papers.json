@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Deep Learning in Neural Networks: An Overview – Schmidhuber (arXiv:1404.7828)",
+    "tags": [
+      "Introduction", "Event-Oriented Notation for Activation Spreading in NNs",
+      "Depth of Credit Assignment Paths (CAPs) and of Problems", "Recurring Themes of Deep Learning",
+      "Supervised NNs, Some Helped by Unsupervised NNs", "DL in FNNs and RNNs for Reinforcement Learning (RL)",
+      "Conclusion", "Acknowledgments"
+    ]
+  },
+  {
+    "name": "Deep Reinforcement Learning: An Overview (arXiv:1701.07274)",
+    "tags": [
+      "Introduction", "Background", "Core Elements", "Important Mechanisms", "Applications",
+      "More Topics", "Resources", "Summary", "Discussions"
+    ]
+  },
+  {
+    "name": "A Survey of Deep Learning for Scientific Discovery (arXiv:2003.11755)",
+    "tags": [
+      "Introduction", "High Level Considerations for Deep Learning", "Resources",
+      "Deep Learning Tasks and Models", "Improving Generalization", "Improving Data Efficiency",
+      "Interpretability and Representation Analysis", "Advanced Methods", "Implementation Tips"
+    ]
+  },
+  {
+    "name": "A Comprehensive Overview and Comparative Analysis on Deep Learning Models: CNN, RNN, LSTM, GRU (arXiv:2305.17473)",
+    "tags": [
+      "Introduction", "Deep Learning", "Supervised Deep Learning Models",
+      "Generative (Unsupervised) Deep Learning Models", "Transformer Architecture",
+      "Deep Reinforcement Learning", "Deep Transfer Learning", "Hybrid Deep Learning Models",
+      "Application of Deep Learning", "Deep Learning Challenges", "Analysis of Deep Learning Models",
+      "Research Directions and Future Aspects", "Conclusion"
+    ]
+  },
+  {
+    "name": "A Survey on Statistical Theory of Deep Learning (arXiv:2401.07187)",
+    "tags": ["Introduction", "Approximation Theory Viewpoint", "Training Dynamics Viewpoint", "Generative Modeling"]
+  },
+  {
+    "name": "A Survey on State-of-the-art Deep Learning Applications and Challenges – Noor & Ige (arXiv:2403.17561)",
+    "tags": [
+      "Introduction", "Fundamentals of Deep Learning", "Types of Deep Learning Models",
+      "State-of-the-art Applications", "Challenges and Future Directions", "Conclusion"
+    ]
+  },
+  {
+    "name": "Efficient Deep Learning: A Survey on Making Deep Learning Models Smaller, Faster, and Better – Menghani (arXiv:2106.08962)",
+    "tags": ["Introduction", "A Mental Model", "Landscape of Efficient Deep Learning"]
+  }
+]

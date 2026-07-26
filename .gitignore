@@ -5,3 +5,6 @@
 # Java / Maven build output
 target/
 *.class
+
+
+docs/

@@ -1,0 +1,75 @@
+[
+  {
+    "name": "OCRS – Jadhav, Chavan, Kadam & Thaware (2025)",
+    "tags": [
+      "user-registration-login", "crime-report-submission", "multiple-complaint-categories",
+      "feedback-mechanism", "complaint-status-tracking", "admin-dashboard", "user-management",
+      "reply-notification-system", "report-generation-analytics", "responsive-design",
+      "input-validation-security"
+    ]
+  },
+  {
+    "name": "Malawi Police Service system – Fabiano & Chipatso (2024)",
+    "tags": ["user-registration-login", "low-bandwidth-rural-accessibility", "reduced-administrative-workload"]
+  },
+  {
+    "name": "Somalia Criminal Record Management System – Barrow, Alam & Mustafa (2019)",
+    "tags": ["crime-report-submission", "record-keeping-database", "responsive-design", "low-bandwidth-rural-accessibility"]
+  },
+  {
+    "name": "Russia online crime reporting service – Maslennikova et al. (2021)",
+    "tags": ["anonymous-reporting", "feedback-mechanism"]
+  },
+  {
+    "name": "OCRS – Kale (2024)",
+    "tags": ["crime-report-submission", "multiple-complaint-categories", "reduced-administrative-workload"]
+  },
+  {
+    "name": "OCRS – Rewatkar et al. (2024)",
+    "tags": ["complaint-status-tracking", "complaint-categorization", "admin-dashboard", "user-training-emphasis"]
+  },
+  {
+    "name": "OCRS for Digital Forensics – Mahmoud, Mandela, Agrawal & Mistry (2023)",
+    "tags": ["evidence-photo-upload", "case-tracking", "ai-based-case-prioritization"]
+  },
+  {
+    "name": "Review of OCRS implementations – Journal, I. (2022)",
+    "tags": ["responsive-design", "scalability-focus"]
+  },
+  {
+    "name": "Online Crime File Management System – Sahana, Ganesan & Kavitha (2022)",
+    "tags": ["crime-report-submission", "admin-dashboard", "data-privacy-authentication", "user-centric-design"]
+  },
+  {
+    "name": "Online FIR Registration & SOS System – Acharya (2022)",
+    "tags": [
+      "crime-report-submission", "evidence-photo-upload", "sos-panic-button", "accident-fast-track",
+      "location-ip-routing", "confidentiality", "automatic-complaint-numbering", "police-module-access",
+      "news-feed-alerts", "crime-data-visualization", "feedback-mechanism"
+    ]
+  },
+  {
+    "name": "Ghana OCRS (RAD methodology) – Wiredu et al. (2024)",
+    "tags": [
+      "anonymous-reporting", "multi-language-support", "real-time-analytics", "user-centric-design",
+      "data-privacy-authentication", "law-enforcement-db-interoperability", "low-bandwidth-rural-accessibility",
+      "sms-phone-verification", "geolocation-validation", "session-auto-timeout", "admin-dashboard",
+      "complaint-status-tracking", "duplicate-report-detection", "crime-index-summary"
+    ]
+  },
+  {
+    "name": "Android crime-map reporting app – Raza & Rajamanickam",
+    "tags": ["crime-map-display", "evidence-photo-upload", "crime-report-submission", "identity-verification-anti-fraud"]
+  },
+  {
+    "name": "LiveSafe – Liu, Li, Mayfield & Huang (2024)",
+    "tags": [
+      "text-based-reporting", "live-dispatcher-chat", "text-to-911-integration", "automatic-location-sharing",
+      "crowdsourced-reporting", "sentiment-analysis", "ai-generated-response-support"
+    ]
+  },
+  {
+    "name": "Systematic review of mobile-phone-data crime analytics – Okmi et al. (2023)",
+    "tags": ["social-network-analysis", "cdr-analysis", "spatiotemporal-analysis", "mobility-based-suspect-id"]
+  }
+]

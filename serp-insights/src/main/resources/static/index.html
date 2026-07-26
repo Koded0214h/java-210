@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERP Insights</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="wrap viz-root">
+        <h1>SERP INSIGHTS</h1>
+        <p class="subtitle">
+            Distinctive features and sub-headings, aggregated concurrently across
+            source papers and ranked by how many papers/systems share each one.
+        </p>
+
+        <section class="panel" id="crime-panel">
+            <div class="panel-header">
+                <h2>Crime-reporting system features</h2>
+                <button class="table-toggle" data-target="crime">Table view</button>
+            </div>
+            <p class="panel-caption" id="crime-caption"></p>
+            <div class="chart" id="crime-chart"></div>
+            <div class="table-view" id="crime-table" hidden></div>
+        </section>
+
+        <section class="panel" id="dl-panel">
+            <div class="panel-header">
+                <h2>Deep-learning paper sub-headings</h2>
+                <button class="table-toggle" data-target="dl">Table view</button>
+            </div>
+            <p class="panel-caption" id="dl-caption"></p>
+            <div class="chart" id="dl-chart"></div>
+            <div class="table-view" id="dl-table" hidden></div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
