@@ -11,9 +11,16 @@ of which genuinely need root — run the commands in step 3 yourself.
 - ayo → `127.0.0.1:8083`
 - dead-or-wounded → `127.0.0.1:8084`
 
-Domain: **`java-210.kodedlabs.com`** — point an A record at this box's IP;
-`nginx.conf`'s `server_name` already expects that host (won't collide with
-the existing `somba` site, which uses `somba.ddns.net` on 443).
+Domain: **`java-210.kodedlabs.com`** — point an A record at this box's IP.
+`nginx.conf`'s `server_name` already expects that host.
+
+**Port 8080, not 80:** this box already runs a Docker container
+(`ship-cli-nginx-1`, an unrelated project) bound to `0.0.0.0:80` — Docker's
+port binding intercepts traffic before the host's own nginx package ever
+sees it, so the host nginx can't use port 80 at all here. Rather than touch
+that other project's live container, java-210 runs on **8080** instead:
+`http://java-210.kodedlabs.com:8080/`. The host nginx package was also
+found `inactive`/`disabled` (never started) — step 3 enables it.
 
 ## 1. Toolchain (already done)
 
@@ -60,25 +67,30 @@ sudo cp nginx.conf /etc/nginx/sites-available/java210
 sudo ln -s /etc/nginx/sites-available/java210 /etc/nginx/sites-enabled/java210
 sudo mkdir -p /var/www/java210
 sudo cp -r landing/* /var/www/java210/
-sudo nginx -t && sudo systemctl reload nginx
+sudo nginx -t
+sudo systemctl enable --now nginx   # was inactive+disabled — this starts it, not just reloads
 
 sudo ufw allow 22
-sudo ufw allow 80
+sudo ufw allow 8080
 sudo ufw enable
 ```
 
+If nginx was already running when you did this (e.g. you re-run this after
+an update), use `sudo systemctl reload nginx` instead of `enable --now`.
+
 (`sites-enabled/default` isn't currently active on this box, so there's
-nothing to remove — only `somba` is enabled alongside this.)
+nothing to remove — only `somba` is enabled alongside this, on a different
+port/domain, no conflict.)
 
 ## 4. Verify
 
 ```bash
-curl -I http://java-210.kodedlabs.com/
-curl -I http://java-210.kodedlabs.com/ayo/
-curl -X POST http://java-210.kodedlabs.com/ayo/api/game/new
+curl -I http://java-210.kodedlabs.com:8080/
+curl -I http://java-210.kodedlabs.com:8080/ayo/
+curl -X POST http://java-210.kodedlabs.com:8080/ayo/api/game/new
 ```
 
-Or by IP before DNS propagates: `curl -H "Host: java-210.kodedlabs.com" http://<ip>/`
+Or by IP before DNS propagates: `curl -H "Host: java-210.kodedlabs.com" http://<ip>:8080/`
 
 ## Updating after a git pull
 
