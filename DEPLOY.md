@@ -92,6 +92,57 @@ curl -X POST http://java-210.kodedlabs.com:8080/ayo/api/game/new
 
 Or by IP before DNS propagates: `curl -H "Host: java-210.kodedlabs.com" http://<ip>:8080/`
 
+## 5. HTTPS (Let's Encrypt)
+
+certbot (with the nginx plugin) is already installed on this box. The catch:
+Let's Encrypt's HTTP-01 challenge always hits **port 80**, which belongs to
+the `ship-cli` Docker container, not our host nginx on 8080. Fix: one
+additive location block was added to `~/ship/ship-cli/nginx.conf` (backed
+up as `nginx.conf.bak-java210` alongside it) that redirects just
+`/.well-known/acme-challenge/` to our host's port 8080 — nothing else about
+that container changed, and it doesn't need touching again after this.
+
+```bash
+docker exec ship-cli-nginx-1 nginx -t
+docker exec ship-cli-nginx-1 nginx -s reload
+```
+
+### Phase 1 — get the certificate (needs root)
+
+```bash
+cd ~/java-210
+git pull
+sudo cp nginx.conf /etc/nginx/sites-available/java210
+sudo mkdir -p /var/www/certbot
+sudo nginx -t && sudo systemctl reload nginx
+
+sudo certbot certonly --webroot -w /var/www/certbot \
+  -d java-210.kodedlabs.com \
+  --register-unsafely-without-email --agree-tos --non-interactive
+```
+
+Verify: `sudo certbot certificates` should list `java-210.kodedlabs.com`,
+cert files under `/etc/letsencrypt/live/java-210.kodedlabs.com/`.
+
+### Phase 2 — add the HTTPS server block (needs root)
+
+Once the cert exists, add a `listen 443 ssl` server block to
+`/etc/nginx/sites-available/java210` (same `location` blocks as the 8080
+one, plus `ssl_certificate`/`ssl_certificate_key` pointing at the paths
+above), and change the 8080 block to redirect everything except the
+challenge path to HTTPS. This repo's `nginx.conf` will be updated with that
+full config once the cert exists — `git pull`, re-copy, `nginx -t`, reload.
+
+```bash
+sudo ufw allow 443
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Auto-renewal: `certbot` on Debian/Ubuntu installs a systemd timer
+(`systemctl list-timers | grep certbot`) that renews automatically — the
+webroot path stays valid indefinitely since the ship-cli redirect is
+permanent, so no manual steps going forward.
+
 ## Updating after a git pull
 
 ```bash
