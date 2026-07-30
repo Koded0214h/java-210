@@ -1,109 +1,94 @@
 # Deploying to kodedlabs
 
-One nginx host on port 80: the landing page at `/`, and each of the 4 Spring
-Boot apps reverse-proxied behind its own path prefix (`/serp-insights/`,
-`/vehicle-tracker/`, `/ayo/`, `/dead-or-wounded/`). See `nginx.conf` at the
-repo root for the actual config — this doc is the steps to get four apps
-running persistently and nginx pointed at them.
+Status as of the last deploy pass: all 4 apps are built and running on
+`vps3435100` (kodedlabs) as **user-level** systemd services — no root was
+needed for that part (Java/Maven were installed into `~/tools` since the
+box has no passwordless `sudo`). What's left is nginx + the firewall, both
+of which genuinely need root — run the commands in step 3 yourself.
 
-## 1. Prerequisites on the VPS
+- serp-insights → `127.0.0.1:8081`
+- vehicle-tracker → `127.0.0.1:8082`
+- ayo → `127.0.0.1:8083`
+- dead-or-wounded → `127.0.0.1:8084`
 
-```bash
-sudo apt update
-sudo apt install -y openjdk-17-jdk maven nginx git
-git clone <this-repo-url> java210
-cd java210
-```
+Domain: **`java-210.kodedlabs.com`** — point an A record at this box's IP;
+`nginx.conf`'s `server_name` already expects that host (won't collide with
+the existing `somba` site, which uses `somba.ddns.net` on 443).
 
-## 2. Build all four jars
+## 1. Toolchain (already done)
 
-```bash
-(cd serp-insights && mvn -q package -DskipTests)
-(cd vehicle-tracker/web && mvn -q package -DskipTests)
-(cd ayo/web && mvn -q package -DskipTests)
-(cd dead-or-wounded/web && mvn -q package -DskipTests)
-```
-
-Each produces a `target/*.jar`. Note the exact jar filename per project —
-Maven includes the version (`1.0.0`) in the name.
-
-## 3. Run each app as a systemd service
-
-Ports: `8081` serp-insights, `8082` vehicle-tracker, `8083` ayo,
-`8084` dead-or-wounded — these must match `nginx.conf`.
-
-Create `/etc/systemd/system/java210-serp-insights.service`:
-
-```ini
-[Unit]
-Description=Java210 - serp-insights
-After=network.target
-
-[Service]
-WorkingDirectory=/home/<user>/java210/serp-insights
-ExecStart=/usr/bin/java -jar target/serp-insights-1.0.0.jar --server.port=8081
-Restart=on-failure
-User=<user>
-
-[Install]
-WantedBy=multi-user.target
-```
-
-Repeat for the other three, changing `WorkingDirectory`, the jar filename,
-the port, and the service name:
-
-- `java210-vehicle-tracker.service` → `vehicle-tracker/web`, port `8082`
-- `java210-ayo.service` → `ayo/web`, port `8083`, and set
-  `Environment=GEMINI_API_KEY=your-key` under `[Service]` if you want to
-  override the key baked into `application.properties`
-- `java210-dead-or-wounded.service` → `dead-or-wounded/web`, port `8084`
-
-Then:
+Java 17 (Temurin) and Maven were installed with no root, as tarballs under
+`~/tools`, added to `PATH`/`JAVA_HOME` in `~/.bashrc`:
 
 ```bash
-sudo systemctl daemon-reload
-sudo systemctl enable --now java210-serp-insights java210-vehicle-tracker java210-ayo java210-dead-or-wounded
-sudo systemctl status java210-ayo   # spot-check one
+export JAVA_HOME="$HOME/tools/jdk-17.0.20+8"
+export PATH="$JAVA_HOME/bin:$HOME/tools/apache-maven-3.9.9/bin:$PATH"
 ```
 
-## 4. Point nginx at it
+## 2. Services (already done)
+
+Each app is a **user** systemd unit at `~/.config/systemd/user/java210-*.service`
+(not `/etc/systemd/system/`, so no root needed):
 
 ```bash
+systemctl --user status java210-serp-insights java210-vehicle-tracker java210-ayo java210-dead-or-wounded
+```
+
+`ayo` and `vehicle-tracker` have `Environment=GEMINI_API_KEY=...` /
+`Environment=MAPBOX_TOKEN=...` baked into their unit files directly (not in
+git — unit files are local-only). Rotate either key by editing the relevant
+`~/.config/systemd/user/java210-*.service` file and running:
+
+```bash
+systemctl --user daemon-reload && systemctl --user restart java210-ayo
+```
+
+**Known gap:** `loginctl show-user kodedlabs -p Linger` is `no`, meaning
+these services stop once every session for this user closes — they'll
+survive normal SSH disconnects as long as *some* session stays open, but
+not a full logout/reboot. Fix (needs root, one-time):
+
+```bash
+sudo loginctl enable-linger kodedlabs
+```
+
+## 3. nginx + firewall (needs root — run these yourself)
+
+```bash
+cd ~/java-210
 sudo cp nginx.conf /etc/nginx/sites-available/java210
 sudo ln -s /etc/nginx/sites-available/java210 /etc/nginx/sites-enabled/java210
-sudo rm -f /etc/nginx/sites-enabled/default
 sudo mkdir -p /var/www/java210
 sudo cp -r landing/* /var/www/java210/
 sudo nginx -t && sudo systemctl reload nginx
-```
 
-## 5. Firewall
-
-Only port 80 (and 22 for SSH) needs to be open publicly — the four app
-ports (8081–8084) are proxied internally via `127.0.0.1`, not exposed
-directly:
-
-```bash
 sudo ufw allow 22
 sudo ufw allow 80
 sudo ufw enable
 ```
 
-## 6. Verify
+(`sites-enabled/default` isn't currently active on this box, so there's
+nothing to remove — only `somba` is enabled alongside this.)
+
+## 4. Verify
 
 ```bash
-curl -I http://<your-ip>/                       # landing page
-curl -I http://<your-ip>/ayo/                   # each app
-curl -X POST http://<your-ip>/ayo/api/game/new
+curl -I http://java-210.kodedlabs.com/
+curl -I http://java-210.kodedlabs.com/ayo/
+curl -X POST http://java-210.kodedlabs.com/ayo/api/game/new
 ```
+
+Or by IP before DNS propagates: `curl -H "Host: java-210.kodedlabs.com" http://<ip>/`
 
 ## Updating after a git pull
 
 ```bash
-cd java210 && git pull
-(cd <project> && mvn -q package -DskipTests)
-sudo systemctl restart java210-<project>
+cd ~/java-210 && git pull
+source ~/.bashrc   # picks up JAVA_HOME/PATH if this is a fresh shell
+(cd <project-dir> && mvn -q package -DskipTests)
+systemctl --user restart java210-<name>
 ```
 
 No nginx reload needed for app-only changes — only if `nginx.conf` or the
-landing page itself changes.
+landing page itself changes, then repeat the relevant `cp`/`reload` from
+step 3.
