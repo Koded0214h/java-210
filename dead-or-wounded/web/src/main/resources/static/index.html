@@ -4,43 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dead or Wounded</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="board">
-        <h1>DEAD OR WOUNDED</h1>
-        <p class="subtitle">Guess the 4-digit code before time runs out.</p>
+    <div class="crt">
+        <div class="scanlines" aria-hidden="true"></div>
 
-        <div class="hud">
-            <div class="timer" id="timer">60</div>
-            <div class="attempts">Attempts: <span id="attempts">0</span></div>
-        </div>
+        <main class="terminal">
+            <div class="title-bar">
+                <span class="title-dots"><i></i><i></i><i></i></span>
+                <span class="title-text">session: dead-or-wounded // 4-digit cipher</span>
+            </div>
 
-        <form id="guess-form" autocomplete="off">
-            <input
-                id="guess-input"
-                type="text"
-                inputmode="numeric"
-                pattern="\d{4}"
-                maxlength="4"
-                placeholder="0000"
-                aria-label="4-digit guess"
-                disabled
-            >
-            <button type="submit" id="guess-submit" disabled>Guess</button>
-        </form>
+            <div class="terminal-body">
+                <pre class="ascii-heading" aria-hidden="true">DEAD OR WOUNDED</pre>
+                <p class="subtitle">// crack the 4-digit cipher before the channel closes.</p>
 
-        <p class="error" id="error"></p>
+                <div class="boot-log" id="boot-log"></div>
 
-        <ul class="history" id="history"></ul>
+                <div class="game-area" id="game-area" hidden>
+                    <div class="hud">
+                        <div class="hud-row">
+                            <span class="hud-label">TIME</span>
+                            <span class="timer-bar" id="timer-bar"></span>
+                            <span class="timer-num" id="timer">60</span>
+                        </div>
+                        <div class="hud-row">
+                            <span class="hud-label">ATTEMPTS</span>
+                            <span class="hud-value" id="attempts">0</span>
+                        </div>
+                    </div>
 
-        <div class="game-over" id="game-over" hidden>
-            <p id="game-over-message"></p>
-            <button id="restart">Play Again</button>
-        </div>
+                    <form id="guess-form" autocomplete="off">
+                        <span class="prompt">GUESS&gt;</span>
+                        <input
+                            id="guess-input"
+                            type="text"
+                            inputmode="numeric"
+                            pattern="\d{4}"
+                            maxlength="4"
+                            placeholder="____"
+                            aria-label="4-digit guess"
+                            disabled
+                        >
+                        <button type="submit" id="guess-submit" disabled>ENTER</button>
+                    </form>
 
-        <button id="start" class="start-button">Start Game</button>
-    </main>
+                    <p class="error" id="error"></p>
+
+                    <div class="history" id="history"></div>
+                </div>
+
+                <div class="game-over" id="game-over" hidden>
+                    <p id="game-over-message"></p>
+                </div>
+
+                <button id="start" class="start-button">[ run new_game.sh ]</button>
+            </div>
+        </main>
+    </div>
 
     <script src="script.js"></script>
 </body>

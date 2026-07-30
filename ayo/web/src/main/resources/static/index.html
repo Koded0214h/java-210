@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ayo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&family=Fraunces:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main class="board-wrap">
-        <h1>AYO</h1>
+        <h1>Ayo</h1>
         <p class="subtitle">Capture an opponent's pit by landing your last seed there, making it hold 2 or 3.</p>
 
-        <div class="turn-row">
-            <div class="turn-indicator" id="turn-indicator">Player A's turn</div>
-            <button id="start" class="start-button">New Game</button>
+        <div class="control-row">
+            <div class="turn-row">
+                <div class="turn-indicator" id="turn-indicator">Player A's turn</div>
+                <div class="thinking" id="thinking" hidden>Gemini is thinking&hellip;</div>
+            </div>
+
+            <label class="auto-toggle">
+                <input type="checkbox" id="auto-mode">
+                <span class="toggle-track"><span class="toggle-thumb"></span></span>
+                <span class="toggle-label">Auto mode &middot; Gemini plays B</span>
+            </label>
         </div>
 
         <p class="message" id="message"></p>
@@ -35,8 +46,11 @@
             </div>
         </div>
 
-        <div class="game-over" id="game-over" hidden>
-            <p id="game-over-message"></p>
+        <div class="bottom-row">
+            <button id="start" class="start-button">New game</button>
+            <div class="game-over" id="game-over" hidden>
+                <p id="game-over-message"></p>
+            </div>
         </div>
     </main>
 

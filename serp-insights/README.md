@@ -47,6 +47,37 @@ from the assignment.
 The same aggregator is reused for both corpora — it doesn't know or care
 whether a "tag" is a feature or a heading.
 
+## Live SERP mode
+
+The dashboard is search-driven: type a query into either panel and it runs
+the actual assignment pipeline — fetch a real SERP, then concurrently mine
+each result (one worker thread per result), then rank the extracted tags
+with `ConcurrentTagAggregator`, same as before. **No API key, signup, or
+billing account required** — both search sources are free and keyless.
+
+There's no single general-web search API that's both free and keyless
+(DuckDuckGo's HTML endpoint serves a bot-challenge to scripted requests;
+Google/Bing require a paid or billing-linked account), so each panel uses a
+domain-specific academic search API instead — which also happens to fit the
+assignment's subject matter (real papers) better than generic web search:
+
+- **Deep-learning headings** — `ArxivClient` searches arXiv
+  (`export.arxiv.org/api/query`, free/unlimited/no key) for real papers,
+  then `PageContentFetcher` fetches each one's actual rendered HTML from
+  `ar5iv.labs.arxiv.org` (arXiv's HTML-rendering mirror), and
+  `HeadingExtractor` pulls its real `<h2>`/`<h3>` section headings. Some
+  older arXiv IDs have no ar5iv rendering and silently redirect back to the
+  plain abs/metadata page — `HeadingExtractor` is scoped to ar5iv's
+  `ltx_title` heading classes specifically, so that fallback page yields no
+  tags instead of polluting results with sidebar nav text.
+- **Crime-reporting features** — `CrossRefClient` searches CrossRef
+  (`api.crossref.org/works`, free/unlimited/no key), which indexes papers
+  across most publishers. Most matched papers are paywalled, so instead of
+  fetching the full page, `FeatureExtractor` mines the title/abstract text
+  CrossRef already returns (most results lack an abstract; the request asks
+  for more results than needed to compensate).
+- **Aggregate** — same `ConcurrentTagAggregator` as before, unchanged.
+
 ## Running it
 
 ```bash
@@ -54,15 +85,19 @@ cd serp-insights
 mvn spring-boot:run
 ```
 
-Then open `http://localhost:8080`. The dashboard shows two ranked bar charts
-(crime-reporting features, deep-learning headings), each with hover tooltips
-and a table-view toggle.
+Then open `http://localhost:8080/serp-insights/` (the app has
+`server.servlet.context-path=/serp-insights` set so it can sit behind a
+single reverse proxy alongside the other three projects — see the
+top-level `nginx.conf` and `DEPLOY.md`).
 
 ### API
 
-| Method | Path                | Description                                                      |
-|--------|---------------------|--------------------------------------------------------------------|
-| GET    | `/api/crime-features` | Crime-reporting features, ranked by number of systems having each |
-| GET    | `/api/dl-headings`    | Deep-learning sub-headings, ranked by number of papers having each |
+| Method | Path                     | Description                                                              |
+|--------|--------------------------|---------------------------------------------------------------------------|
+| POST   | `/api/search/crime-features` | Body `{"query": "..."}` — live SERP + feature extraction, ranked        |
+| POST   | `/api/search/dl-headings`    | Body `{"query": "..."}` — live SERP + heading extraction, ranked        |
+| GET    | `/api/crime-features`   | Curated sample corpus (no network calls) — crime-reporting features       |
+| GET    | `/api/dl-headings`      | Curated sample corpus (no network calls) — deep-learning sub-headings     |
 
-Both return `{ documentCount, rankedTags: [{ tag, documentCount }, ...] }`.
+`GET` endpoints return `{ documentCount, rankedTags: [{ tag, documentCount }, ...] }`.
+`POST` endpoints return `{ query, resultsRequested, resultsUsed, resultsFailed, aggregation: {...same shape...} }`.

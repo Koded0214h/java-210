@@ -55,7 +55,10 @@ cd web
 mvn spring-boot:run
 ```
 
-Then open `http://localhost:8080`.
+Then open `http://localhost:8080/dead-or-wounded/` (the app has
+`server.servlet.context-path=/dead-or-wounded` set so it can sit behind a
+single reverse proxy alongside the other three projects — see the
+top-level `nginx.conf` and `DEPLOY.md`).
 
 ### API
 

@@ -4,34 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SERP Insights</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="wrap viz-root">
-        <h1>SERP INSIGHTS</h1>
-        <p class="subtitle">
-            Distinctive features and sub-headings, aggregated concurrently across
-            source papers and ranked by how many papers/systems share each one.
-        </p>
+    <main class="ledger">
+        <header class="masthead">
+            <p class="stamp">LIVE ACQUISITION &middot; CONCURRENT WORKER POOL</p>
+            <h1>SERP Insights</h1>
+            <p class="subtitle">
+                Type a query. A real thread pool fetches a real search-engine results page,
+                then mines each result concurrently for distinctive features or section
+                headings — ranked by how many results share each one.
+            </p>
+        </header>
 
-        <section class="panel" id="crime-panel">
-            <div class="panel-header">
-                <h2>Crime-reporting system features</h2>
-                <button class="table-toggle" data-target="crime">Table view</button>
+        <section class="card" id="crime-panel" data-mode="crime">
+            <div class="card-tab">01</div>
+            <div class="card-body">
+                <div class="card-header">
+                    <div>
+                        <h2>Crime-reporting system features</h2>
+                        <p class="card-caption">Source: CrossRef &middot; mined from title + abstract text</p>
+                    </div>
+                    <button class="table-toggle" data-target="crime">Table</button>
+                </div>
+
+                <form class="search-form" id="crime-form">
+                    <input type="text" id="crime-query" value="crime reporting system features" placeholder="Search query...">
+                    <button type="submit">Run search</button>
+                </form>
+
+                <p class="status-line" id="crime-status">Enter a query and run the search.</p>
+                <div class="lanes" id="crime-lanes" hidden></div>
+                <div class="chart" id="crime-chart"></div>
+                <div class="table-view" id="crime-table" hidden></div>
             </div>
-            <p class="panel-caption" id="crime-caption"></p>
-            <div class="chart" id="crime-chart"></div>
-            <div class="table-view" id="crime-table" hidden></div>
         </section>
 
-        <section class="panel" id="dl-panel">
-            <div class="panel-header">
-                <h2>Deep-learning paper sub-headings</h2>
-                <button class="table-toggle" data-target="dl">Table view</button>
+        <section class="card" id="dl-panel" data-mode="dl">
+            <div class="card-tab">02</div>
+            <div class="card-body">
+                <div class="card-header">
+                    <div>
+                        <h2>Deep-learning paper sub-headings</h2>
+                        <p class="card-caption">Source: arXiv &middot; mined from real ar5iv-rendered HTML</p>
+                    </div>
+                    <button class="table-toggle" data-target="dl">Table</button>
+                </div>
+
+                <form class="search-form" id="dl-form">
+                    <input type="text" id="dl-query" value="deep learning survey" placeholder="Search query...">
+                    <button type="submit">Run search</button>
+                </form>
+
+                <p class="status-line" id="dl-status">Enter a query and run the search.</p>
+                <div class="lanes" id="dl-lanes" hidden></div>
+                <div class="chart" id="dl-chart"></div>
+                <div class="table-view" id="dl-table" hidden></div>
             </div>
-            <p class="panel-caption" id="dl-caption"></p>
-            <div class="chart" id="dl-chart"></div>
-            <div class="table-view" id="dl-table" hidden></div>
         </section>
     </main>
 

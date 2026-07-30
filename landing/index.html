@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 210</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="monitor">
+        <header class="monitor-head">
+            <div>
+                <p class="eyebrow">CSC210 &middot; CONCURRENT PROGRAMMING &middot; GROUP 9</p>
+                <h1>JAVA 210</h1>
+            </div>
+            <div class="clock" id="clock">--:--:--</div>
+        </header>
+
+        <div class="table-wrap">
+            <div class="table-head">
+                <span>PID</span>
+                <span>PROCESS</span>
+                <span class="col-threads">THREADS</span>
+                <span class="col-status">STATUS</span>
+            </div>
+
+            <a class="row" href="/serp-insights/">
+                <span class="pid">01</span>
+                <span class="process">
+                    <span class="name">serp-insights</span>
+                    <span class="desc">Live SERP fetch + concurrent feature/heading mining</span>
+                </span>
+                <span class="threads col-threads">pool: 1/result</span>
+                <span class="status col-status"><i></i>live search</span>
+            </a>
+
+            <a class="row" href="/vehicle-tracker/">
+                <span class="pid">02</span>
+                <span class="process">
+                    <span class="name">vehicle-tracker</span>
+                    <span class="desc">Java monitor pattern (JCiP &sect;4.2.2) &middot; fleet on a live map</span>
+                </span>
+                <span class="threads col-threads">1/vehicle + view</span>
+                <span class="status col-status"><i></i>running</span>
+            </a>
+
+            <a class="row" href="/ayo/">
+                <span class="pid">03</span>
+                <span class="process">
+                    <span class="name">ayo</span>
+                    <span class="desc">Sowing/capture board game &middot; optional Gemini opponent</span>
+                </span>
+                <span class="threads col-threads">main + AI call</span>
+                <span class="status col-status"><i></i>playable</span>
+            </a>
+
+            <a class="row" href="/dead-or-wounded/">
+                <span class="pid">04</span>
+                <span class="process">
+                    <span class="name">dead-or-wounded</span>
+                    <span class="desc">4-digit cipher &middot; 60s clock against a background thread</span>
+                </span>
+                <span class="threads col-threads">main + timer</span>
+                <span class="status col-status"><i></i>playable</span>
+            </a>
+        </div>
+
+        <footer class="monitor-foot">
+            <span>4 processes</span>
+            <span class="sep">&middot;</span>
+            <span>click a row to attach</span>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

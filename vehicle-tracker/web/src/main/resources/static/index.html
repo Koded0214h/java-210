@@ -4,43 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fleet Vehicle Tracker</title>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main class="wrap">
-        <h1>FLEET VEHICLE TRACKER</h1>
-        <p class="subtitle">
-            Live view of a shared <code>MonitorVehicleTracker</code>. Background GPS
-            threads move each vehicle on the server; this page polls a consistent
-            snapshot once a second.
-        </p>
+    <div id="map"></div>
 
-        <div class="layout">
-            <div class="grid-wrap">
-                <div class="grid" id="grid"></div>
-            </div>
-
-            <div class="side-panel">
-                <h2>Fleet</h2>
-                <table id="fleet-table">
-                    <thead>
-                        <tr><th>ID</th><th>X</th><th>Y</th></tr>
-                    </thead>
-                    <tbody id="fleet-body"></tbody>
-                </table>
-
-                <h2>Dispatch a correction</h2>
-                <form id="dispatch-form">
-                    <select id="vehicle-select"></select>
-                    <input id="x-input" type="number" placeholder="x" required>
-                    <input id="y-input" type="number" placeholder="y" required>
-                    <button type="submit">Send</button>
-                </form>
-                <p class="error" id="error"></p>
-            </div>
+    <header class="masthead">
+        <div class="masthead-title">
+            <span class="dot-live" id="live-dot"></span>
+            <h1>FLEET OPS</h1>
         </div>
-    </main>
+        <p class="subtitle">
+            One shared <code>MonitorVehicleTracker</code>, guarded by a single lock — GPS
+            threads write, this view polls a consistent snapshot once a second.
+        </p>
+    </header>
 
+    <div class="map-legend">
+        <span class="legend-swatch"></span> live position
+        <span class="legend-sep">·</span>
+        updated <span id="last-update">—</span>
+    </div>
+
+    <button class="dock-toggle" id="dock-toggle" aria-expanded="true" aria-controls="dock">Fleet ▾</button>
+
+    <div class="style-switch" id="style-switch">
+        <button data-style="dark-v11" class="active">Dark</button>
+        <button data-style="streets-v12">Streets</button>
+        <button data-style="satellite-streets-v12">Satellite</button>
+        <button data-style="light-v11">Light</button>
+    </div>
+
+    <aside class="dock" id="dock">
+        <section class="panel-block">
+            <h2>Fleet</h2>
+            <table id="fleet-table">
+                <thead>
+                    <tr><th>ID</th><th>X</th><th>Y</th></tr>
+                </thead>
+                <tbody id="fleet-body"></tbody>
+            </table>
+        </section>
+
+        <section class="panel-block">
+            <h2>Dispatch a correction</h2>
+            <form id="dispatch-form">
+                <select id="vehicle-select"></select>
+                <input id="x-input" type="number" placeholder="x" required>
+                <input id="y-input" type="number" placeholder="y" required>
+                <button type="submit">Send</button>
+            </form>
+            <p class="error" id="error"></p>
+        </section>
+    </aside>
+
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

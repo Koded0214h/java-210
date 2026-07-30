@@ -76,10 +76,24 @@ possibly many viewers/dispatchers at once.
 - `GpsSimulator` starts one background thread per vehicle on app startup —
   the updater threads.
 - The browser page polls `GET /api/vehicles` once a second and renders each
-  vehicle as a dot on a grid (the view thread).
+  vehicle as a Mapbox marker (the view thread) — the tracker's abstract
+  `(x, y)` grid is linearly mapped onto a real bounding box over Lagos
+  (`gridToLngLat` in `script.js`), so the fleet moves over real streets
+  instead of a blank grid. Backend state and the API are unchanged — this
+  is purely a presentation-layer mapping.
 - The "Dispatch a correction" form calls `POST /api/vehicles/{id}/location`
   to set a vehicle's position manually, exactly like the simulated GPS
   threads do internally.
+
+The map needs a Mapbox token, set via:
+```bash
+export MAPBOX_TOKEN=pk.your-token
+```
+`ConfigController` serves it to the frontend at runtime (`GET /api/config`)
+so it never lives in committed source — even though `pk.` tokens are meant
+for client-side use, keeping literal secrets out of git history is worth
+doing regardless. Without it set, the dashboard falls back to the fleet
+table only (no map).
 
 Run it with:
 
@@ -88,7 +102,10 @@ cd web
 mvn spring-boot:run
 ```
 
-Then open `http://localhost:8080`.
+Then open `http://localhost:8080/vehicle-tracker/` (the app has
+`server.servlet.context-path=/vehicle-tracker` set so it can sit behind a
+single reverse proxy alongside the other three projects — see the
+top-level `nginx.conf` and `DEPLOY.md`).
 
 ### API
 

@@ -64,6 +64,18 @@ class GameState implements Serializable {
         return pitIndex >= start && pitIndex < start + PITS_PER_SIDE;
     }
 
+    /** Pit indices belonging to {@code player} that currently have seeds to sow. */
+    List<Integer> validPitsFor(int player) {
+        int start = player == 0 ? 0 : PITS_PER_SIDE;
+        List<Integer> valid = new ArrayList<>();
+        for (int i = start; i < start + PITS_PER_SIDE; i++) {
+            if (pits[i] > 0) {
+                valid.add(i);
+            }
+        }
+        return valid;
+    }
+
     /** Applies a move: sow from pitIndex, resolve captures, and advance/end the game. Returns the outcome. */
     MoveOutcome applyMove(int pitIndex) {
         int lastPit = sow(pitIndex);

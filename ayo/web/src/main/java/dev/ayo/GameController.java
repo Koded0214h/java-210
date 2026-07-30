@@ -23,15 +23,22 @@ class GameController {
             boolean gameOver,
             Integer winner,
             Integer lastPit,
-            List<Integer> capturedPits
+            List<Integer> capturedPits,
+            String aiReason
     ) {
+    }
+
+    private final AiMoveService aiMoveService;
+
+    GameController(AiMoveService aiMoveService) {
+        this.aiMoveService = aiMoveService;
     }
 
     @PostMapping("/new")
     StateResponse newGame(HttpSession session) {
         GameState state = new GameState();
         session.setAttribute(SESSION_KEY, state);
-        return toResponse(state, null, List.of());
+        return toResponse(state, null, List.of(), null);
     }
 
     @PostMapping("/move")
@@ -54,7 +61,24 @@ class GameController {
         }
 
         GameState.MoveOutcome outcome = state.applyMove(pit);
-        return toResponse(state, outcome.lastPit(), outcome.capturedPits());
+        return toResponse(state, outcome.lastPit(), outcome.capturedPits(), null);
+    }
+
+    /** Auto mode: Gemini reasons over the board and picks Player B's move. */
+    @PostMapping("/ai-move")
+    StateResponse aiMove(HttpSession session) {
+        GameState state = activeGame(session);
+
+        if (state.isGameOver()) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Game is already over.");
+        }
+        if (state.getCurrentPlayer() != 1) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "It isn't Player B's turn.");
+        }
+
+        AiMoveService.AiMove aiMove = aiMoveService.chooseMove(state);
+        GameState.MoveOutcome outcome = state.applyMove(aiMove.pitIndex());
+        return toResponse(state, outcome.lastPit(), outcome.capturedPits(), aiMove.reason());
     }
 
     private GameState activeGame(HttpSession session) {
@@ -65,7 +89,7 @@ class GameController {
         return state;
     }
 
-    private StateResponse toResponse(GameState state, Integer lastPit, List<Integer> capturedPits) {
+    private StateResponse toResponse(GameState state, Integer lastPit, List<Integer> capturedPits, String aiReason) {
         return new StateResponse(
                 state.getPits().clone(),
                 state.getStores().clone(),
@@ -73,7 +97,8 @@ class GameController {
                 state.isGameOver(),
                 state.winner(),
                 lastPit,
-                capturedPits
+                capturedPits,
+                aiReason
         );
     }
 }
