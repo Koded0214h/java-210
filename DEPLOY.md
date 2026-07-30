@@ -126,17 +126,19 @@ cert files under `/etc/letsencrypt/live/java-210.kodedlabs.com/`.
 
 ### Phase 2 — add the HTTPS server block (needs root)
 
-Once the cert exists, add a `listen 443 ssl` server block to
-`/etc/nginx/sites-available/java210` (same `location` blocks as the 8080
-one, plus `ssl_certificate`/`ssl_certificate_key` pointing at the paths
-above), and change the 8080 block to redirect everything except the
-challenge path to HTTPS. This repo's `nginx.conf` will be updated with that
-full config once the cert exists — `git pull`, re-copy, `nginx -t`, reload.
+`nginx.conf` now has a `listen 443 ssl` server block with the cert paths,
+plus the 8080 block reduced to just the renewal challenge location and a
+redirect to HTTPS for everything else:
 
 ```bash
+cd ~/java-210
+git pull
+sudo cp nginx.conf /etc/nginx/sites-available/java210
 sudo ufw allow 443
 sudo nginx -t && sudo systemctl reload nginx
 ```
+
+Site is now at **`https://java-210.kodedlabs.com/`** — no port needed.
 
 Auto-renewal: `certbot` on Debian/Ubuntu installs a systemd timer
 (`systemctl list-timers | grep certbot`) that renews automatically — the
